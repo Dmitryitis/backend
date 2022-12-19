@@ -1,0 +1,81 @@
+image: docker:19.03.12
+services:
+  - docker:19.03.12-dind
+
+stages:
+  - build
+  - push
+  - deploy
+  - notify
+
+variables:
+  GIT_SUBMODULE_STRATEGY: recursive
+
+before_script:
+  - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" $CI_REGISTRY
+  - 'command -v ssh-agent >/dev/null || ( apt-get update -y && apt-get install openssh-client -y && apt-get install git -y )'
+  - 'which ssh-agent || (apk add --no-cache openssh-client)'
+  - apk add --no-cache openssh-client bash python3 docker-compose curl
+  - eval $(ssh-agent -s)
+  - mkdir -p ~/.ssh
+  - echo "$SSH_PRIVATE_KEY" | ssh-add - > ~/.ssh/id_rsa
+  - echo "StrictHostKeyChecking no" >> ~/.ssh/config
+  - chmod -R 700 ~/.ssh
+  - export IMAGE=$CI_REGISTRY_IMAGE
+  - export POSTGRES_DATABASE_NAME=$POSTGRES_DATABASE_NAME
+  - export POSTGRES_USER=$POSTGRES_USER
+  - export POSTGRES_PASSWORD=$POSTGRES_PASSWORD
+  - export POSTGRES_HOST=$POSTGRES_HOST
+  - export REDIS_CONNECTION=$REDIS_CONNECTION
+  - export REDIS_HOST=$REDIS_HOST
+
+notify:
+  stage: notify
+  script:
+    - bash ci-notify.sh "Success work backend"
+  tags:
+    - vkr
+
+notify_error:
+    stage: notify
+    script:
+        - bash ci-notify.sh "Fail work backend"
+    when: on_failure
+    tags:
+      - vkr
+
+build:
+  stage: build
+  script:
+    - docker build -t ${IMAGE}/python:latest -f deploy/python/Dockerfile .
+    - docker build -t ${IMAGE}/nginx:latest -f deploy/nginx/Dockerfile .
+  tags:
+    - vkr
+  only:
+    - main
+
+push:
+  stage: push
+  script:
+    - docker push ${IMAGE}/python:latest
+    - docker push ${IMAGE}/nginx:latest
+  tags:
+    - vkr
+  only:
+    - main
+
+deploy:
+  stage: deploy
+  script:
+    - docker-compose -f docker-compose.yml pull
+    - docker-compose -f docker-compose.yml -p $PROJECT_NAME stop
+    - docker-compose -f docker-compose.yml -p $PROJECT_NAME rm -f
+    - docker volume rm $PROJECT_NAME_static || true
+    - docker volume rm $PROJECT_NAME_media || true
+    - docker-compose -f docker-compose.yml -p $PROJECT_NAME up -d
+  variables:
+    PROJECT_NAME: vkr_backend
+  tags:
+    - vkr
+  only:
+    - main

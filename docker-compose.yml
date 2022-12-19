@@ -1,0 +1,94 @@
+version: "3"
+
+services:
+  nginx:
+    image: ${CI_REGISTRY_IMAGE}/nginx:latest
+    restart: always
+    volumes:
+      - static:/app/static
+      - media:/app/media
+    ports:
+      - "80:80"
+    depends_on:
+      - python
+    networks:
+      - web
+      - project
+
+  python: &python
+    image: ${CI_REGISTRY_IMAGE}/python:latest
+    restart: always
+    environment:
+      - POSTGRES_DATABASE_NAME=$POSTGRES_DATABASE_NAME
+      - POSTGRES_USER=$POSTGRES_USER
+      - POSTGRES_PASSWORD=$POSTGRES_PASSWORD
+      - POSTGRES_HOST=$POSTGRES_HOST
+      - REDIS_HOST=redis
+      - REDIS_CONNECTION=redis://redis:6379/0
+      - REDIS_PORT=6379
+      - DEBUG=False
+    ports:
+      - "8000:8000"
+    volumes:
+      - static:/app/static
+      - media:/app/media
+    networks:
+      - project
+    depends_on:
+      - postgres
+
+  redis:
+    image: redis:6-alpine
+    restart: always
+    command: redis-server --appendonly yes
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis:/data
+    networks:
+      - project
+
+  celery:
+    <<: *python
+    build:
+      context: .
+    restart: always
+    working_dir: /app/src
+    command: celery -A todo worker --loglevel INFO -Q default,images -B
+    ports: [ ]
+    volumes: [ ]
+    environment:
+      - CACHE_URL=redis://redis:6379/0
+      - CELERY_BROKER_URL=redis://redis:6379/1
+    networks:
+      - project
+    depends_on:
+      - redis
+      - python
+
+  postgres:
+    image: postgres:14.4-alpine
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_DB=$POSTGRES_DATABASE_NAME
+      - POSTGRES_USER=$POSTGRES_USER
+      - POSTGRES_PASSWORD=$POSTGRES_PASSWORD
+    volumes:
+      - "postgres:/var/lib/postgresql/data/"
+    restart: always
+    networks:
+      - project
+
+networks:
+  web:
+    external:
+      name: web
+  project:
+
+
+volumes:
+  postgres:
+  static:
+  media:
+  redis:
