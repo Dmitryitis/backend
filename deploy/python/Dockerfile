@@ -17,4 +17,4 @@ COPY . .
 RUN python src/manage.py collectstatic --noinput
 
 CMD python src/manage.py migrate && \
-    gunicorn todo.wsgi --chdir /app/src --bind 0.0.0.0 --preload --log-file -
+    gunicorn vkr.wsgi --chdir /app/src --bind 0.0.0.0 --preload --log-file -

@@ -54,7 +54,7 @@ services:
       context: .
     restart: always
     working_dir: /app/src
-    command: celery -A todo worker --loglevel INFO -Q default,images -B
+    command: celery -A vkr worker --loglevel INFO -Q default,images -B
     ports: [ ]
     volumes: [ ]
     environment:
