@@ -4,7 +4,6 @@ from django.db import models
 from django.utils.translation import gettext_lazy as _
 
 from api.enums import UserRegistrationMethods
-
 from api.models.abstract import BaseModel
 from api.models.fields import LowercaseEmailField
 from api.models.managers import UserManager
@@ -21,6 +20,15 @@ class User(BaseModel, AbstractBaseUser, PermissionsMixin):
         verbose_name=(_("Registration method: email, Google Oauth etc.")),
         choices=UserRegistrationMethods.choices,
         default=UserRegistrationMethods.email,
+    )
+
+    author_info = models.OneToOneField(
+        "api.Author",
+        on_delete=models.PROTECT,
+        related_name="user",
+        null=True,
+        blank=True,
+        verbose_name=_("Information about the author if it exists"),
     )
 
     objects = UserManager()

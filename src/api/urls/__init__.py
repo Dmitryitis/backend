@@ -1,6 +1,9 @@
 from django.urls import re_path, path
 
 from api.swagger import schema_view
+from .auth import urls as auth_urls
+from .author import urls as author_urls
+from .user import urls as user_urls
 
 urlpatterns = [
     path(
@@ -20,3 +23,6 @@ urlpatterns = [
     ),
 ]
 
+urlpatterns.extend(auth_urls)
+urlpatterns.extend(author_urls)
+urlpatterns.extend(user_urls)

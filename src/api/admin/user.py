@@ -1,5 +1,7 @@
+from django.contrib.admin import ModelAdmin
 from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
 from api.forms.admin.user import CustomUserCreationForm
+from api.admin.actions import convert_images
 
 
 class UserAdmin(BaseUserAdmin):
@@ -29,3 +31,16 @@ class UserAdmin(BaseUserAdmin):
         "email",
     )
     ordering = ("email",)
+
+class AuthorAdmin(ModelAdmin):
+    list_display = (
+        "id",
+        "nickname",
+        "user",
+        "fio"
+    )
+    actions = [convert_images]
+    search_fields = (
+        "nickname","fio"
+    )
+    ordering = ("nickname",)
