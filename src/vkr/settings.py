@@ -49,6 +49,7 @@ INSTALLED_APPS = [
     "drf_yasg",
     "django_filters",
     "storages",
+    "stdimage",
 ]
 
 PROJECT_APPS = [

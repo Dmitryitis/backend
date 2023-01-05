@@ -1,0 +1,8 @@
+{% extends "admin/index.html" %}
+
+{% block sidebar %}
+    {{ block.super }}
+    <p><a href="{% url 'admin_emails' %}">Emails</a></p>
+    <p>API docs: <a href="{% url 'schema-swagger-ui' %}">Swagger UI</a> | <a href="{% url 'schema-redoc' %}">Redoc</a></p>
+    <p>Integrations API docs: <a href="{% url 'integrations-schema-swagger-ui' %}">Swagger UI</a> | <a href="{% url 'integrations-schema-redoc' %}">Redoc</a></p>
+{% endblock %}

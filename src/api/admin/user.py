@@ -32,6 +32,7 @@ class UserAdmin(BaseUserAdmin):
     )
     ordering = ("email",)
 
+
 class AuthorAdmin(ModelAdmin):
     list_display = (
         "id",
@@ -41,6 +42,6 @@ class AuthorAdmin(ModelAdmin):
     )
     actions = [convert_images]
     search_fields = (
-        "nickname","fio"
+        "nickname", "fio"
     )
     ordering = ("nickname",)
