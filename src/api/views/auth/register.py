@@ -39,29 +39,27 @@ class Auth_RegisterViewSet(viewsets.GenericViewSet):
 
     def _create_author(self):
         with transaction.atomic():
-            try:
-                data = self.request.data
-                if all(
-                        key in data.keys() for key in ["left", "right", "top", "bottom", "image"]
-                ):
-                    data["image"] = crop_image(
-                        float(data["left"]),
-                        float(data["top"]),
-                        float(data["right"]),
-                        float(data["bottom"]),
-                        data["image"],
-                    ).open()
+            data = self.request.data
+            if all(
+                    key in data.keys() for key in ["left", "right", "top", "bottom", "image"]
+            ):
+                data["image"] = crop_image(
+                    float(data["left"]),
+                    float(data["top"]),
+                    float(data["right"]),
+                    float(data["bottom"]),
+                    data["image"],
+                ).open()
 
+            author_fields = {
+                "fio": data["fio"],
+                "nickname": data["nickname"],
+            }
 
-                author_fields = {
-                    "fio": data["fio"],
-                    "nickname": data["nickname"],
-                    "avatar": data["image"]
-                }
+            if "image" in data.keys():
+                author_fields["avatar"] = data["image"]
 
-                author = Author.objects.create(**author_fields)
-            except:
-                raise BadRequest("Такой nickname уже существует")
+            author = Author.objects.create(fio=author_fields["fio"], nickname=author_fields["nickname"])
             return author
 
     def _create_user(self, registration_fields: dict):
