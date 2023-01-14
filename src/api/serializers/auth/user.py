@@ -1,4 +1,3 @@
-from django.db import transaction
 from rest_framework import serializers
 
 from api.models import User
@@ -10,7 +9,7 @@ class Auth_RegistrationSerializer(
     serializers.ModelSerializer,
 ):
     email = LowerEmailField(required=True, allow_null=False)
-    image = StdImageSerializerField(write_only=True)
+    image = StdImageSerializerField(write_only=True, required=False)
     left = serializers.FloatField(required=False, read_only=True)
     top = serializers.FloatField(required=False, read_only=True)
     right = serializers.FloatField(required=False, read_only=True)
