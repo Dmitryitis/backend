@@ -28,7 +28,7 @@ SECRET_KEY = 'django-insecure-rwt_v&ig&va-!*5bco@r7n4baw@-ohxll0146s$&oo%h2+m1ob
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.getenv("DEBUG", "false").lower() == "true"
 
-CORS_ORIGIN_WHITELIST = ["http://localhost:3000", "http://193.222.62.109:8080"]
+CORS_ORIGIN_WHITELIST = ["http://localhost:3000","http://localhost:3001", "http://193.222.62.109:8080", "http://193.222.62.109:8081"]
 
 ALLOWED_HOSTS = ["*"]
 
