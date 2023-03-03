@@ -7,6 +7,7 @@ class YahooSymbols_YahooSymbolsReadSerializer(serializers.ModelSerializer):
     class Meta:
         model = YahooSymbol
         fields = (
+            "id",
             "symbol",
             "name"
         )

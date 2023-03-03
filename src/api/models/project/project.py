@@ -8,6 +8,7 @@ from django.utils.translation import gettext_lazy as _
 from datetime import datetime
 
 from api.enums import ProjectTypeData, ProjectStatus
+from api.models.managers import NotDeletedManager
 from utils.image import image_processor
 
 
@@ -49,6 +50,15 @@ class Project(BaseModel):
     project_file_data = models.ForeignKey("api.ProjectFileData", on_delete=models.PROTECT, blank=True, null=True)
     project_status = models.CharField(choices=ProjectStatus.choices, max_length=56,
                                       help_text=_("Project current status"))
+
+    is_deleted = models.BooleanField(default=False)
+
+    objects = models.Manager()
+    not_deleted = NotDeletedManager()
+
+    def delete(self, *args, **kwargs):
+        self.is_deleted = True
+        self.save()
 
     def __str__(self):
         return f"{self.title}"
