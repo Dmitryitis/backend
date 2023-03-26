@@ -18,7 +18,6 @@ from dotenv import load_dotenv, find_dotenv
 BASE_DIR = Path(__file__).resolve().parent.parent.parent
 load_dotenv(find_dotenv())
 
-
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.0/howto/deployment/checklist/
 
@@ -28,10 +27,10 @@ SECRET_KEY = 'django-insecure-rwt_v&ig&va-!*5bco@r7n4baw@-ohxll0146s$&oo%h2+m1ob
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.getenv("DEBUG", "false").lower() == "true"
 
-CORS_ORIGIN_WHITELIST = ["http://localhost:3000","http://localhost:3001", "http://193.222.62.109:8080", "http://193.222.62.109:8081"]
+CORS_ORIGIN_WHITELIST = ["http://localhost:3000", "http://localhost:3001", "http://193.222.62.109:8080",
+                         "http://193.222.62.109:8081"]
 
 ALLOWED_HOSTS = ["*"]
-
 
 # Application definition
 
@@ -50,6 +49,7 @@ INSTALLED_APPS = [
     "django_filters",
     "storages",
     "stdimage",
+    'django_celery_results'
 ]
 
 PROJECT_APPS = [
@@ -59,7 +59,7 @@ PROJECT_APPS = [
 INSTALLED_APPS.extend(PROJECT_APPS)
 
 MIDDLEWARE = [
-     "corsheaders.middleware.CorsMiddleware",
+    "corsheaders.middleware.CorsMiddleware",
     'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -91,7 +91,6 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'vkr.wsgi.application'
 
-
 # Database
 # https://docs.djangoproject.com/en/4.0/ref/settings/#databases
 
@@ -115,7 +114,6 @@ LOGGING = {
     "handlers": {"console": {"class": "logging.StreamHandler", "formatter": "verbose"}},
     "root": {"handlers": ["console"], "level": "DEBUG" if DEBUG else "INFO"},
 }
-
 
 # Password validation
 # https://docs.djangoproject.com/en/4.0/ref/settings/#auth-password-validators
@@ -156,8 +154,6 @@ REST_FRAMEWORK = {
     ),
 }
 
-
-
 # Internationalization
 # https://docs.djangoproject.com/en/4.0/topics/i18n/
 
@@ -168,7 +164,6 @@ TIME_ZONE = 'UTC'
 USE_I18N = True
 
 USE_TZ = True
-
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.0/howto/static-files/
@@ -184,7 +179,6 @@ FILE_UPLOAD_PERMISSIONS = 0o644
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-
 # Strict pagination settings
 DEFAULT_PAGE_SIZE = 2
 MAX_PAGE_SIZE = 100
@@ -197,7 +191,7 @@ REDIS_CONNECTION = os.environ.get("REDIS_CONNECTION", "redis://localhost:6379/0"
 REDIS_HOST = os.environ.get("REDIS_HOST", "localhost")
 REDIS_PORT = 6379
 CELERY_BROKER_URL = REDIS_CONNECTION
-CELERY_RESULT_BACKEND = REDIS_CONNECTION
+CELERY_RESULT_BACKEND = 'django-db'
 CELERY_TASK_ALWAYS_EAGER = (
         os.environ.get("CELERY_TASK_ALWAYS_EAGER", "false").lower() == "true"
 )

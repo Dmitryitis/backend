@@ -6,6 +6,7 @@ from api.models import Project, ProjectFileData, YahooSymbol
 from api.serializers.fields.stdimage import StdImageSerializerField
 from api.serializers.yahoo_symbols.yahoo_symbols import YahooSymbols_YahooSymbolsReadSerializer
 from utils.attributes import set_attribute
+from utils.dataset import dataset_process
 
 
 class ProjectFile_ProjectFileSerializer(serializers.ModelSerializer):
@@ -82,6 +83,8 @@ class Project_ProjectCreateSerializer(serializers.ModelSerializer):
                 file_data_instance = ProjectFileData.objects.filter(id=file_data).first()
 
                 project = self._create_with_file_data(validated_data, file_data_instance, request)
+
+        dataset_process(yahoo_instance.symbol, project.pk)
 
         return project
 
