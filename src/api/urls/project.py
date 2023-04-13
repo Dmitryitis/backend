@@ -11,7 +11,9 @@ router.register('project', Project_ProjectViewSet, 'project-project')
 
 urls = [
     path('project/file/', ProjectFileData_ProjectFileDataViewSet.as_view({'post': 'create'})),
-    path('project/<int:project_id>/table/', ProjectTable_ProjectTableViewSet.as_view({'get': 'retrieve'}))
+    path('project/<int:project_id>/table/', ProjectTable_ProjectTableViewSet.as_view({'get': 'retrieve'})),
+    path('project/<int:project_id>/sma/', ProjectTable_ProjectTableViewSet.as_view({'get': 'get_sma'})),
+    path('project/<int:project_id>/rolling/', ProjectTable_ProjectTableViewSet.as_view({'get': 'get_rolling'})),
 ]
 
 urls.extend([*router.urls])
