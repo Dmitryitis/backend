@@ -3,6 +3,7 @@ from rest_framework import serializers
 
 from api.enums import ProjectStatus
 from api.models import ProjectModel, Project
+from api.services.neural_network.task_network import create_task
 
 
 class ProjectModel_ProjectModelSerializer(serializers.ModelSerializer):
@@ -40,5 +41,7 @@ class ProjectFit_ProjectFitSerializer(serializers.ModelSerializer):
 
             project_model = ProjectModel.objects.create(type_study=type_study, column_predict=column_predict,
                                                         project=project)
+
+            create_task(project.id, column_predict, project_model.id)
 
         return project_model

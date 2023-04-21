@@ -174,6 +174,10 @@ MEDIA_ROOT = BASE_DIR / "media"
 MEDIA_URL = os.environ.get("MEDIA_URL", "/media/")
 FILE_UPLOAD_PERMISSIONS = 0o644
 
+MODELS = os.path.join(BASE_DIR, 'media')
+
+BASE_URL = os.getenv("BASE_URL", 'http://127.0.0.1:8000')
+
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.0/ref/settings/#default-auto-field
 

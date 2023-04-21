@@ -1,10 +1,8 @@
 import numpy as np
 import pandas as pd
-from keras import Sequential
-from keras.callbacks import EarlyStopping
-from keras.layers import LSTM, Dense
 from sklearn.preprocessing import MinMaxScaler
 from sklearn.metrics import r2_score
+from tensorflow import keras
 
 
 class NeuralNetworkFast:
@@ -15,7 +13,7 @@ class NeuralNetworkFast:
         self.training_data_split = 0.95
         self.min_max_scaler = MinMaxScaler(feature_range=(0, 1))
         self.time_steps = 60
-        self.es = EarlyStopping(monitor='loss', mode='min', verbose=1,
+        self.es = keras.callbacks.EarlyStopping(monitor='loss', mode='min', verbose=1,
                                 patience=40, min_delta=0.0010)
         self.fit_model = None
         self.scaled_data = None
@@ -78,11 +76,11 @@ class NeuralNetworkFast:
     @staticmethod
     def create_model(x_train):
         # Build the LSTM model
-        model = Sequential()
-        model.add(LSTM(128, return_sequences=True, input_shape=(x_train.shape[1], x_train.shape[2])))
-        model.add(LSTM(64, return_sequences=False))
-        model.add(Dense(25))
-        model.add(Dense(1))
+        model = keras.Sequential()
+        model.add(keras.layers.LSTM(128, return_sequences=True, input_shape=(x_train.shape[1], x_train.shape[2])))
+        model.add(keras.layers.LSTM(64, return_sequences=False))
+        model.add(keras.layers.Dense(25))
+        model.add(keras.layers.Dense(1))
 
         # Compile the model
         model.compile(optimizer='adam', loss='mean_squared_error')
@@ -93,6 +91,7 @@ class NeuralNetworkFast:
         dataset = self.prepare_data(self.dataframe, self.predict_column)
 
         training_data_len = self.training_data_len(len_dataset=len(dataset), training_data_split=self.training_data_split)
+        print(f'training data {training_data_len}')
 
         self.scaled_data = self.min_max_scaler.fit_transform(dataset)
 
@@ -109,7 +108,7 @@ class NeuralNetworkFast:
 
         training_data_len = self.training_data_len(len_dataset=len(dataset),
                                                    training_data_split=self.training_data_split)
-        test_data = self.scaled_data[training_data_len - 60:, :]
+        test_data = self.scaled_data[training_data_len - self.time_steps:, :]
 
         x_test, y_test = self.prepare_test_data(training_data_len, test_data, dataset, self.time_steps)
 
