@@ -12,6 +12,11 @@ class ProjectTypeData(models.TextChoices):
     symbol = "symbol", _("Symbol Yahoo")
 
 
+class ProjectTypeStudy(models.TextChoices):
+    fast = "fast", _("Fast")
+    slow = "slow", _("Slow")
+
+
 class ProjectStatus(models.TextChoices):
     draft = "draft", _("draft")
     in_work = "in_work", _("in work")

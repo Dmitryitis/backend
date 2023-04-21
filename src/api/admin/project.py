@@ -13,3 +13,7 @@ class ProjectAdmin(ModelAdmin):
 
 class ProjectFileDataAdmin(ModelAdmin):
     list_display = ("file",)
+
+
+class ProjectModelAdmin(ModelAdmin):
+    list_display = ("project", 'column_predict')
