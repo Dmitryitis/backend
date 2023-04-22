@@ -5,3 +5,4 @@ from api.models.user.user import User
 from api.models.yahooSymbols.yahoo_symbols import YahooSymbol
 from api.models.yahooSymbols.yahoo_symbols_csv_import import YahooSymbolsCsvImport
 from api.models.project.project_model import ProjectModel
+from api.models.project.project_result import ProjectResult

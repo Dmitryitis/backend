@@ -1,7 +1,7 @@
 import numpy as np
 import pandas as pd
 from sklearn.preprocessing import MinMaxScaler
-from sklearn.metrics import r2_score
+from sklearn.metrics import r2_score, mean_absolute_error, mean_absolute_percentage_error
 from tensorflow import keras
 
 
@@ -19,9 +19,11 @@ class NeuralNetworkFast:
         self.scaled_data = None
 
         self.predict_result = {
-            'predictions': None,
+            'predictions': [],
             'rmse': 0,
-            'r2': 0
+            'r2': 0,
+            'mae': 0,
+            'mape': 0
         }
 
     @staticmethod
@@ -118,7 +120,11 @@ class NeuralNetworkFast:
 
         rmse = np.sqrt(np.mean(((predictions - y_test) ** 2)))
         r2 = r2_score(y_test, predictions)
+        mae = mean_absolute_error(y_test, predictions)
+        mape = mean_absolute_percentage_error(y_test, predictions)
 
-        self.predict_result['predictions'] = predictions
+        self.predict_result['predictions'] = list(predictions)
         self.predict_result['rmse'] = rmse
         self.predict_result['r2'] = r2
+        self.predict_result['mae'] = mae
+        self.predict_result['mape'] = mape

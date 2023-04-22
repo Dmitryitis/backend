@@ -13,6 +13,7 @@ class ProjectModel_ProjectModelSerializer(serializers.ModelSerializer):
             "id",
             "type_study",
             "column_predict",
+            "save_model_url"
         ]
 
 

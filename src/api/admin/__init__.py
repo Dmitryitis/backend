@@ -1,11 +1,12 @@
 from django.contrib import admin
 from django.utils.translation import gettext as _
 
-from api.admin.project import ProjectAdmin, ProjectFileDataAdmin, ProjectModelAdmin
+from api.admin.project import ProjectAdmin, ProjectFileDataAdmin, ProjectModelAdmin, ProjectResultAdmin
 from api.admin.user import UserAdmin, AuthorAdmin
 from api.admin.yahoo_symbol import YahooSymbolAdmin
 from api.admin.yahoo_symbols_import import CsvSymbolsImportAdmin
-from api.models import User, Author, YahooSymbolsCsvImport, YahooSymbol, Project, ProjectFileData, ProjectModel
+from api.models import User, Author, YahooSymbolsCsvImport, YahooSymbol, Project, ProjectFileData, ProjectModel, \
+    ProjectResult
 
 
 class AdminSite(admin.AdminSite):
@@ -23,6 +24,7 @@ admin.site.register(Author, AuthorAdmin)
 admin.site.register(Project, ProjectAdmin)
 admin.site.register(ProjectFileData, ProjectFileDataAdmin)
 admin.site.register(ProjectModel, ProjectModelAdmin)
+admin.site.register(ProjectResult, ProjectResultAdmin)
 
 admin.site.register(YahooSymbolsCsvImport, CsvSymbolsImportAdmin)
 admin.site.register(YahooSymbol, YahooSymbolAdmin)

@@ -17,3 +17,7 @@ class ProjectFileDataAdmin(ModelAdmin):
 
 class ProjectModelAdmin(ModelAdmin):
     list_display = ("project", 'column_predict')
+
+
+class ProjectResultAdmin(ModelAdmin):
+    list_display = ("id", "project", 'r2')
