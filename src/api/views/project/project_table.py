@@ -39,8 +39,6 @@ class ProjectTable_ProjectTableViewSet(viewsets.GenericViewSet,
 
         data_analyze.set_index_datetime()
 
-        print(data_analyze.get_log_profitability())
-
         data_analyze_dict = {
             'stat_info': {
                 'rows': data_analyze.get_shape()[0],

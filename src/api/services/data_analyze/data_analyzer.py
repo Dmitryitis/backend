@@ -9,10 +9,30 @@ class DataAnalyzerOHLC:
 
         self.dataset = pd.read_csv(file_url, delimiter=',')
 
+    @staticmethod
+    def training_data_len(len_dataset, training_data_split):
+        return int(np.ceil(len_dataset * training_data_split))
+
     def set_index_datetime(self):
         self.dataset['date'] = self.dataset['Date']
         self.dataset['Date'] = pd.to_datetime(self.dataset['Date'])
         self.dataset.set_index('Date', inplace=True)
+
+    def get_test_data(self):
+        test_data_len = self.training_data_len(len(self.dataset), 0.95)
+        test_dataset = pd.DataFrame()
+
+        self.dataset['Date'] = pd.to_datetime(self.dataset['Date'])
+
+        test_dataset['Close'] = self.dataset['Close']
+        test_dataset['Date'] = self.dataset['Date']
+
+        test_dataset = test_dataset.loc[test_data_len:, :]
+
+        return {
+            'y_test': test_dataset['Close'].to_numpy(),
+            'date': test_dataset['Date']
+        }
 
     def get_head_data(self):
         return self.dataset.head(100).to_numpy()

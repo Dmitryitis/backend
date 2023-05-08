@@ -22,6 +22,7 @@ def get_project_file_model_path(
 @app.task(queue=settings.QUEUE_DEFAULT, serializer='json')
 def fit_project(project_id, predict_column, project_model_id):
     from api.models import Project
+    from api.services.neural_network.neural_network_lstm import NeuralNetworkLstm
     from api.services.neural_network.neural_network import NeuralNetworkFast
     from django.db import transaction
     from api.models import ProjectModel
@@ -36,25 +37,25 @@ def fit_project(project_id, predict_column, project_model_id):
 
         neural_network.fit()
         neural_network.predict()
-        path_dict = get_project_file_model_path(f'model',project.id, 'model')
-        path_to_save = f"{path_dict['path']}.h5"
-        neural_network.fit_model.save(path_to_save)
-
-        project_model.save_model_url = f"{settings.BASE_URL}/media/{path_dict['relative_path']}.h5"
-        project.project_status = ProjectStatus.ready
-
-        project_model.save()
-        project.save()
-
-        data_result = {
-            "predictions": neural_network.predict_result['predictions'],
-            "rmse": neural_network.predict_result['rmse'],
-            "r2": neural_network.predict_result['r2'],
-            "mae": neural_network.predict_result['mae'],
-            "mape": neural_network.predict_result['mape'],
-            "project": project,
-            "project_model": project_model
-        }
-
-        ProjectResult.objects.create(**data_result)
-        print(neural_network.predict_result['r2'])
+        # path_dict = get_project_file_model_path(f'model',project.id, 'model')
+        # path_to_save = f"{path_dict['path']}.h5"
+        # neural_network.fit_model.save(path_to_save)
+        #
+        # project_model.save_model_url = f"{settings.BASE_URL}/media/{path_dict['relative_path']}.h5"
+        # project.project_status = ProjectStatus.ready
+        #
+        # project_model.save()
+        # project.save()
+        #
+        # data_result = {
+        #     "predictions": neural_network.predict_result['predictions'],
+        #     "rmse": neural_network.predict_result['rmse'],
+        #     "r2": neural_network.predict_result['r2'],
+        #     "mae": neural_network.predict_result['mae'],
+        #     "mape": neural_network.predict_result['mape'],
+        #     "project": project,
+        #     "project_model": project_model
+        # }
+        #
+        # ProjectResult.objects.create(**data_result)
+        # print(neural_network.predict_result['r2'])

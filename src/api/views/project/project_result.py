@@ -4,6 +4,7 @@ from rest_framework.response import Response
 
 from api.models import Project, ProjectResult
 from api.serializers.project.project_result import ProjectResult_ProjectResultSerializer
+from api.services.data_analyze.data_analyzer import DataAnalyzerOHLC
 
 
 class ProjectResult_ProjectResultViewSet(viewsets.GenericViewSet,
@@ -26,10 +27,14 @@ class ProjectResult_ProjectResultViewSet(viewsets.GenericViewSet,
 
         serializer = self.get_serializer(queryset)
 
+        data_analyze = DataAnalyzerOHLC(serializer.data['project']["project_file_data"]["file"])
+
+        pred_data = data_analyze.get_test_data()
+
         if serializer.data['project'] is not None:
             return Response(
                 status=status.HTTP_200_OK,
-                data=serializer.data
+                data={**serializer.data, **pred_data}
             )
         return Response(
             status=status.HTTP_404_NOT_FOUND,
