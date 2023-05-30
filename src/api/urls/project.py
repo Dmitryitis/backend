@@ -6,6 +6,7 @@ from api.views.project.project_file_data import ProjectFileData_ProjectFileDataV
 from api.views.project.project_fit import ProjectFit_ProjectViewSet
 from api.views.project.project_model import ProjectModel_ProjectModelViewSet
 from api.views.project.project_result import ProjectResult_ProjectResultViewSet
+from api.views.project.project_seetings import ProjectSettings_ProjectViewSet
 from api.views.project.project_table import ProjectTable_ProjectTableViewSet
 
 router = DefaultRouter()
@@ -19,7 +20,8 @@ urls = [
     path('project/<int:project_id>/rolling/', ProjectTable_ProjectTableViewSet.as_view({'get': 'get_rolling'})),
     path('project/fit/', ProjectFit_ProjectViewSet.as_view({'post': 'create'})),
     path('project/<int:project_id>/model/', ProjectModel_ProjectModelViewSet.as_view({'get': 'retrieve'})),
-    path('project/<int:project_id>/result/', ProjectResult_ProjectResultViewSet.as_view({'get': 'retrieve'}))
+    path('project/<int:project_id>/result/', ProjectResult_ProjectResultViewSet.as_view({'get': 'retrieve'})),
+    path('project/settings/', ProjectSettings_ProjectViewSet.as_view({'get': 'list'})),
 ]
 
 urls.extend([*router.urls])

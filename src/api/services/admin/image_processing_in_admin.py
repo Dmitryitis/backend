@@ -16,9 +16,7 @@ def re_render_variations(ids, model_name):
             model_class = _class
     data = model_class.objects.filter(id__in=ids)
 
-    if (
-        model_class.__name__ == Author.__name__
-    ):
+    if model_class.__name__ == Author.__name__:
         for item in data:
             if item.avatar:
                 try:

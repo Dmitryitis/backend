@@ -21,3 +21,24 @@ class ProjectStatus(models.TextChoices):
     draft = "draft", _("draft")
     in_work = "in_work", _("in work")
     ready = "ready", _("ready")
+
+
+class TechnicalIndicatorsEnum(models.TextChoices):
+    bollinger_bands = 'bollinger_bands', _('bollinger_bands')
+    rsi = 'rsi', _('rsi')
+    fibonacci = 'fibonacci', _('fibonacci')
+    ema = 'ema', _('ema')
+    macd = 'macd', _('macd')
+
+    @classmethod
+    def has_value(cls, value):
+        return value in cls._value2member_map_
+
+class ArchitectureNeuralNetworkEnum(models.TextChoices):
+    lstm = 'lstm', _('lstm')
+    cnnLstm = 'cnnLstm', _('cnnLstm')
+    cnnBiLstm = 'cnnBiLstm', _('cnnBiLstm')
+
+    @classmethod
+    def has_value(cls, value):
+        return value in cls._value2member_map_

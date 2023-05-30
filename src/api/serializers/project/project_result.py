@@ -19,4 +19,4 @@ class ProjectResult_ProjectResultSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = ProjectResult
-        fields = ("id", "project", "predictions", "mae", 'r2', 'mape', 'rmse', 'project_model')
+        fields = ("id", "mae", "mae_train", 'r2', 'r2_train', 'mape', 'mape_train', 'rmse', 'rmse_train', "project", "predictions", 'project_model', 'loss', 'val_loss')

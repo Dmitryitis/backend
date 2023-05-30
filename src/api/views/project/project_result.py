@@ -27,7 +27,7 @@ class ProjectResult_ProjectResultViewSet(viewsets.GenericViewSet,
 
         serializer = self.get_serializer(queryset)
 
-        data_analyze = DataAnalyzerOHLC(serializer.data['project']["project_file_data"]["file"])
+        data_analyze = DataAnalyzerOHLC(serializer.data['project']["project_file_data"]["file"], len(serializer.data['predictions']))
 
         pred_data = data_analyze.get_test_data()
 

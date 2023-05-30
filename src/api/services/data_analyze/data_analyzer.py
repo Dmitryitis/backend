@@ -3,9 +3,10 @@ import pandas as pd
 
 
 class DataAnalyzerOHLC:
-    def __init__(self, file_url):
+    def __init__(self, file_url, len_test=None):
         self.file_url = file_url
         self.columns = ["Date", "Open", "High", "Low", "Close", "Adj Close", "Volume"]
+        self.len_test = len_test
 
         self.dataset = pd.read_csv(file_url, delimiter=',')
 
@@ -19,18 +20,18 @@ class DataAnalyzerOHLC:
         self.dataset.set_index('Date', inplace=True)
 
     def get_test_data(self):
-        test_data_len = self.training_data_len(len(self.dataset), 0.95)
+        test_data_len = len(self.dataset) - self.len_test
         test_dataset = pd.DataFrame()
 
         self.dataset['Date'] = pd.to_datetime(self.dataset['Date'])
 
-        test_dataset['Close'] = self.dataset['Close']
+        test_dataset['Adj Close'] = self.dataset['Adj Close']
         test_dataset['Date'] = self.dataset['Date']
 
         test_dataset = test_dataset.loc[test_data_len:, :]
 
         return {
-            'y_test': test_dataset['Close'].to_numpy(),
+            'y_test': test_dataset['Adj Close'].to_numpy(),
             'date': test_dataset['Date']
         }
 

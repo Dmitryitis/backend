@@ -22,10 +22,12 @@ class StopWhenTrialKeepBeingPrunedCallback:
             study.stop()
 
 
-class NeuralNetworkLstm:
-    def __init__(self, file_url, predict_column):
+class NeuralNetworkOptuna:
+    def __init__(self, file_url, predict_column, indicators, neural_network):
         self.file_url = file_url
         self.dataframe = pd.read_csv(file_url, delimiter=',')
+        self.indicators = indicators
+        self.neural_network = neural_network
         self.predict_column = predict_column
         self.training_data_split = 0.95
         self.min_max_scaler = MinMaxScaler()
@@ -239,7 +241,7 @@ class NeuralNetworkLstm:
                                     kernel_initializer='random_uniform',
                                            go_backwards=True)
 
-        model.add(keras.layers.Bidirectional(forward_layer,input_shape=(params['time_steps'], 5), backward_layer=backward_layer,))
+        model.add(keras.layers.Bidirectional(forward_layer, input_shape=(params['time_steps'], 5), backward_layer=backward_layer,))
         model.add(keras.layers.LSTM(params["lstm2_nodes"], dropout=params["lstm2_dropout"], return_sequences=False))
         model.add(keras.layers.Dense(1))
 
